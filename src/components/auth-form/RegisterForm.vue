@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <Form
     v-slot="$form"
     initial-values="formData"
@@ -55,9 +56,14 @@ import { ref } from 'vue'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import { Form } from '@primevue/forms'
+import Toast from 'primevue/toast'
 import * as z from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'
+import { supabase } from '@/supabase'
+import { useToastNotify } from '@/composables/use-toast-notify'
+
+const { showToast } = useToastNotify()
 
 const formData = ref({
   firstname: '',
@@ -74,6 +80,22 @@ const rules = z.object({
 const resolver = ref(zodResolver(rules))
 
 const submitRegisterForm = async ({ valid }) => {
-  console.log(valid)
+  if (!valid) return
+
+  let { data, error } = await supabase.auth.signUp({
+    email: formData.value.email,
+    password: formData.value.password,
+    options: {
+      data: { first_name: formData.value.firstname },
+    },
+  })
+
+  if (error) {
+    showToast('error', 'Регистрация', 'Пользователь с такой почтой уже есть.')
+  } else {
+    showToast('success', 'Регистрация', 'Вы зарегистрированы!')
+  }
+
+  console.log(data)
 }
 </script>

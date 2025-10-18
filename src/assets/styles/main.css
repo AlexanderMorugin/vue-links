@@ -5,6 +5,6 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 10px;
-  @apply bg-gray-100;
-  @apply text-black;
+  @apply bg-gray-900;
+  /* @apply text-black; */
 }

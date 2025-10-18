@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <Form
     v-slot="$form"
     initial-values="formData"
@@ -43,10 +44,14 @@
 import { ref } from 'vue'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
+import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 import { Form } from '@primevue/forms'
 import * as z from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'
+
+const toast = useToast()
 
 const emit = defineEmits(['resetPassword'])
 
@@ -63,6 +68,10 @@ const rules = z.object({
 const resolver = ref(zodResolver(rules))
 
 const submitLoginForm = async ({ valid }) => {
+  if (!valid) return
+
+  toast.add({ severity: 'info', summary: 'Логин', detail: 'Вход успешно выполнен', life: 5000 })
+
   console.log(valid)
 }
 </script>
