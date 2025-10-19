@@ -1,7 +1,16 @@
 <template>
-  <div><RouterView /></div>
+  <TheHeader v-if="userStore.user" />
+  <RouterView />
 </template>
 
-<script setup></script>
+<script setup>
+import { onMounted } from 'vue'
+import TheHeader from './components/TheHeader.vue'
+import { useUserStore } from './stores/user-store'
 
-<style scoped></style>
+const userStore = useUserStore()
+
+onMounted(async () => {
+  await userStore.getUser()
+})
+</script>

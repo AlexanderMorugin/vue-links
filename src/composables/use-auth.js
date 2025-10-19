@@ -49,6 +49,16 @@ export function useAuth() {
     })
   }
 
+  // Логаут
+  const signout = async () => {
+    return await handleRequest(async () => {
+      const { data, error } = await supabase.auth.signOut()
+
+      if (error) throw error
+      return data
+    })
+  }
+
   // Сброс пароля
   const resetpassword = async (email) => {
     return await handleRequest(async () => {
@@ -71,5 +81,14 @@ export function useAuth() {
     })
   }
 
-  return { loading, errorMessage, signup, signin, signinGitHub, resetpassword, updatepassword }
+  return {
+    loading,
+    errorMessage,
+    signup,
+    signin,
+    signinGitHub,
+    signout,
+    resetpassword,
+    updatepassword,
+  }
 }
