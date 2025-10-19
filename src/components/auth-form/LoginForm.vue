@@ -34,7 +34,7 @@
     </div>
     <span class="mb-3 cursor-pointer block" @click="emit('resetPassword')">Забыли пароль?</span>
     <div class="grid grid-cols-2 gap-3">
-      <Button type="submit" class="w-full" label="Вход" />
+      <Button type="submit" class="w-full" label="Вход" :loading="loading" />
       <Button type="submit" icon="pi pi-github" class="w-full" label="GitHub" severity="contrast" />
     </div>
   </Form>
@@ -45,13 +45,15 @@ import { ref } from 'vue'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Toast from 'primevue/toast'
-import { useToast } from 'primevue/usetoast'
 import { Form } from '@primevue/forms'
 import * as z from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'
+import { useToastNotify } from '@/composables/use-toast-notify'
+import { useAuth } from '@/composables/use-auth'
 
-const toast = useToast()
+const { showToast } = useToastNotify()
+const { loading, errorMessage, signin } = useAuth()
 
 const emit = defineEmits(['resetPassword'])
 
@@ -70,8 +72,14 @@ const resolver = ref(zodResolver(rules))
 const submitLoginForm = async ({ valid }) => {
   if (!valid) return
 
-  toast.add({ severity: 'info', summary: 'Логин', detail: 'Вход успешно выполнен', life: 5000 })
-
-  console.log(valid)
+  try {
+    await signin({
+      email: formData.value.email,
+      password: formData.value.password,
+    })
+  } catch (error) {
+    showToast('error', 'Ошибка логина', errorMessage.value)
+    console.log(error)
+  }
 }
 </script>

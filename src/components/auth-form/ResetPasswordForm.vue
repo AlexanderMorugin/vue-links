@@ -20,7 +20,7 @@
       }}</Message>
     </div>
     <div class="grid grid-cols-2 gap-3">
-      <Button type="submit" class="w-full" label="Сброс пароля" />
+      <Button type="submit" class="w-full" label="Сброс пароля" :loading="loading" />
     </div>
   </Form>
 </template>
@@ -33,6 +33,11 @@ import { Form } from '@primevue/forms'
 import * as z from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'
+import { useToastNotify } from '@/composables/use-toast-notify'
+import { useAuth } from '@/composables/use-auth'
+
+const { showToast } = useToastNotify()
+const { loading, errorMessage, resetpassword } = useAuth()
 
 const formData = ref({
   email: '',
@@ -45,6 +50,14 @@ const rules = z.object({
 const resolver = ref(zodResolver(rules))
 
 const submitResetPasswordForm = async ({ valid }) => {
-  console.log(valid)
+  if (!valid) return
+
+  try {
+    await resetpassword(formData.value.email)
+    showToast('success', 'Ссылка на сброс пароля отправлен на указанную почту')
+  } catch (error) {
+    showToast('error', 'Ошибка сброса пароля', errorMessage.value)
+    console.log(error)
+  }
 }
 </script>
