@@ -45,7 +45,7 @@
       }}</Message>
     </div>
     <div class="grid grid-cols-2 gap-3">
-      <Button type="submit" class="w-full" label="Регистрация" />
+      <Button type="submit" class="w-full" label="Регистрация" :loading="loading" />
       <Button type="submit" icon="pi pi-github" class="w-full" label="GitHub" severity="contrast" />
     </div>
   </Form>
@@ -60,10 +60,11 @@ import Toast from 'primevue/toast'
 import * as z from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'
-import { supabase } from '@/supabase'
 import { useToastNotify } from '@/composables/use-toast-notify'
+import { useAuth } from '@/composables/use-auth'
 
 const { showToast } = useToastNotify()
+const { loading, errorMessage, signup } = useAuth()
 
 const formData = ref({
   firstname: '',
@@ -82,20 +83,15 @@ const resolver = ref(zodResolver(rules))
 const submitRegisterForm = async ({ valid }) => {
   if (!valid) return
 
-  let { data, error } = await supabase.auth.signUp({
-    email: formData.value.email,
-    password: formData.value.password,
-    options: {
-      data: { first_name: formData.value.firstname },
-    },
-  })
-
-  if (error) {
-    showToast('error', 'Регистрация', 'Пользователь с такой почтой уже есть.')
-  } else {
-    showToast('success', 'Регистрация', 'Вы зарегистрированы!')
+  try {
+    await signup({
+      email: formData.value.email,
+      password: formData.value.password,
+      firstname: formData.value.firstname,
+    })
+  } catch (error) {
+    showToast('error', 'Ошибка регистрации', errorMessage.value)
+    console.log(error)
   }
-
-  console.log(data)
 }
 </script>
