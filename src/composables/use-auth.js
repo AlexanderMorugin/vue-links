@@ -42,12 +42,25 @@ export function useAuth() {
   const resetpassword = async (email) => {
     return await handleRequest(async () => {
       // Логиним пользователя в supabase authentication
-      const { data, error } = await supabase.auth.resetPasswordForEmail(email)
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'http://localhost:5173/reset-password',
+      })
 
       if (error) throw error
       return data
     })
   }
 
-  return { loading, errorMessage, signup, signin, resetpassword }
+  // Обновление пароля
+  const updatepassword = async (password) => {
+    return await handleRequest(async () => {
+      // Логиним пользователя в supabase authentication
+      const { data, error } = await supabase.auth.updateUser({ password })
+
+      if (error) throw error
+      return data
+    })
+  }
+
+  return { loading, errorMessage, signup, signin, resetpassword, updatepassword }
 }
