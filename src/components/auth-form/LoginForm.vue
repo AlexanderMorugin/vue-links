@@ -35,7 +35,14 @@
     <span class="mb-3 cursor-pointer block" @click="emit('resetPassword')">Забыли пароль?</span>
     <div class="grid grid-cols-2 gap-3">
       <Button type="submit" class="w-full" label="Вход" :loading="loading" />
-      <Button type="submit" icon="pi pi-github" class="w-full" label="GitHub" severity="contrast" />
+      <Button
+        icon="pi pi-github"
+        class="w-full"
+        label="GitHub"
+        severity="contrast"
+        :loading="loading"
+        @click="signinGitHub"
+      />
     </div>
   </Form>
 </template>
@@ -53,7 +60,7 @@ import { useToastNotify } from '@/composables/use-toast-notify'
 import { useAuth } from '@/composables/use-auth'
 
 const { showToast } = useToastNotify()
-const { loading, errorMessage, signin } = useAuth()
+const { loading, errorMessage, signin, signinGitHub } = useAuth()
 
 const emit = defineEmits(['resetPassword'])
 

@@ -27,7 +27,6 @@ export function useAuth() {
   // Логин
   const signin = async ({ email, password }) => {
     return await handleRequest(async () => {
-      // Логиним пользователя в supabase authentication
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -38,10 +37,21 @@ export function useAuth() {
     })
   }
 
+  // Логин GitHub
+  const signinGitHub = async () => {
+    return await handleRequest(async () => {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+      })
+
+      if (error) throw error
+      return data
+    })
+  }
+
   // Сброс пароля
   const resetpassword = async (email) => {
     return await handleRequest(async () => {
-      // Логиним пользователя в supabase authentication
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: 'http://localhost:5173/reset-password',
       })
@@ -54,7 +64,6 @@ export function useAuth() {
   // Обновление пароля
   const updatepassword = async (password) => {
     return await handleRequest(async () => {
-      // Логиним пользователя в supabase authentication
       const { data, error } = await supabase.auth.updateUser({ password })
 
       if (error) throw error
@@ -62,5 +71,5 @@ export function useAuth() {
     })
   }
 
-  return { loading, errorMessage, signup, signin, resetpassword, updatepassword }
+  return { loading, errorMessage, signup, signin, signinGitHub, resetpassword, updatepassword }
 }

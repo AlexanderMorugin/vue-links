@@ -46,7 +46,14 @@
     </div>
     <div class="grid grid-cols-2 gap-3">
       <Button type="submit" class="w-full" label="Регистрация" :loading="loading" />
-      <Button type="submit" icon="pi pi-github" class="w-full" label="GitHub" severity="contrast" />
+      <Button
+        icon="pi pi-github"
+        class="w-full"
+        label="GitHub"
+        severity="contrast"
+        :loading="loading"
+        @click="signinGitHub"
+      />
     </div>
   </Form>
 </template>
@@ -64,7 +71,7 @@ import { useToastNotify } from '@/composables/use-toast-notify'
 import { useAuth } from '@/composables/use-auth'
 
 const { showToast } = useToastNotify()
-const { loading, errorMessage, signup } = useAuth()
+const { loading, errorMessage, signup, signinGitHub } = useAuth()
 
 const formData = ref({
   firstname: '',
