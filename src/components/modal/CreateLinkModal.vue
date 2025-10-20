@@ -59,7 +59,7 @@
           <label for="isFavorite">Добавить в избранное</label>
         </div>
         <div class="flex justify-end gap-2 my-4">
-          <Button type="submit" label="Добавить" :loading="isLoading" />
+          <Button type="submit" label="Добавить" :loading="isLoadingButton" />
         </div>
       </template>
     </Form>
@@ -82,9 +82,11 @@ import Toast from 'primevue/toast'
 import { supabase } from '@/supabase'
 import { useToastNotify } from '@/composables/use-toast-notify'
 import CustomLoader from '../loader/CustomLoader.vue'
+import { useUserStore } from '@/stores/user-store'
 
 const { showToast } = useToastNotify()
 const modelValue = defineModel()
+const userStore = useUserStore()
 
 const formData = ref({
   name: '',
@@ -95,6 +97,7 @@ const formData = ref({
 })
 
 const isLoading = ref(false)
+const isLoadingButton = ref(false)
 const categoryList = ref(null)
 
 const rules = z.object({
@@ -104,6 +107,15 @@ const rules = z.object({
 
 const resolver = ref(zodResolver(rules))
 
+const cleanFormInputs = () => {
+  formData.value = {
+    name: '',
+    url: '',
+    description: '',
+    category: null,
+    isFavorite: false,
+  }
+}
 const getCategories = async () => {
   isLoading.value = false
   try {
@@ -121,8 +133,44 @@ const getCategories = async () => {
   }
 }
 
+const getDomaine = (url) => {
+  const { hostname } = new URL(url)
+  const parts = hostname.split('.')
+  if (parts.length > 2) {
+    return parts.slice(-2).join('.')
+  }
+
+  return hostname
+}
+
 const submitLinkForm = async () => {
-  console.log('saveLink')
+  isLoadingButton.value = false
+  const staticName = getDomaine(formData.value.url)
+
+  const payload = {
+    name: formData.value.name,
+    url: formData.value.url,
+    description: formData.value.description,
+    category: formData.value.category.id,
+    click_count: 0,
+    is_favorite: formData.value.isFavorite,
+    preview_image: `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${staticName}&size=128`,
+    user_id: userStore.user.id,
+  }
+
+  try {
+    isLoadingButton.value = true
+    const { error } = await supabase.from('links').insert(payload).select()
+    if (error) throw error
+    modelValue.value = false
+    showToast('success', 'Поздравляем!', 'Ссылка успешно добавлена!')
+    cleanFormInputs()
+  } catch (error) {
+    console.log(error)
+    showToast('error', 'Ошибка', 'Не удалось добавить ссылку.')
+  } finally {
+    isLoadingButton.value = false
+  }
 }
 
 watch(modelValue, async (newValue) => {
