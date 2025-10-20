@@ -1,4 +1,5 @@
 <template>
+  <CategoriesModal v-model="categoriesModalOpen" />
   <Toast />
   <header class="mb-5">
     <Menubar>
@@ -7,7 +8,7 @@
           <span class="font-bold">Vue Links</span>
           <div class="flex items-center gap-2">
             <Button icon="pi pi-link" rounded="true" />
-            <Button icon="pi pi-folder" rounded="true" />
+            <Button icon="pi pi-folder" rounded="true" @click="categoriesModalOpen = true" />
           </div>
         </div>
       </template>
@@ -28,7 +29,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import Avatar from 'primevue/avatar'
@@ -37,11 +38,14 @@ import Toast from 'primevue/toast'
 import { useUserStore } from '@/stores/user-store'
 import { useAuth } from '@/composables/use-auth'
 import { useToastNotify } from '@/composables/use-toast-notify'
+import CategoriesModal from './modal/CategoriesModal.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
 const { showToast } = useToastNotify()
 const { errorMessage, signout } = useAuth()
+
+const categoriesModalOpen = ref(false)
 
 const emailFirstLetter = computed(() => {
   return userStore.user?.email ? userStore.user.email[0].toUpperCase() : ''
