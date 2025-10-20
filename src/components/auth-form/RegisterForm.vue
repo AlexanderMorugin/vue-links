@@ -60,6 +60,7 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import { Form } from '@primevue/forms'
@@ -69,6 +70,8 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'
 import { useToastNotify } from '@/composables/use-toast-notify'
 import { useAuth } from '@/composables/use-auth'
+
+const router = useRouter()
 
 const { showToast } = useToastNotify()
 const { loading, errorMessage, signup, signinGitHub } = useAuth()
@@ -96,6 +99,8 @@ const submitRegisterForm = async ({ valid }) => {
       password: formData.value.password,
       firstname: formData.value.firstname,
     })
+
+    router.replace({ name: 'HomeView' })
   } catch (error) {
     showToast('error', 'Ошибка регистрации', errorMessage.value)
     console.log(error)
