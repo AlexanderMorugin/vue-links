@@ -1,15 +1,24 @@
 <template>
-  <main>
-    <h1>HomeView</h1>
-    <Button label="Submit" severity="warn" />
+  <CustomLoader v-if="linksStore.isLoading" />
+  <main v-else>
+    <h1 v-if="!linksStore.links?.length" class="font-bold text-center">Пока ссылок нет.</h1>
+    <template v-else>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <LinkCard v-for="link in linksStore.links" :key="link.id" :link="link" />
+      </div>
+    </template>
   </main>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
-import Button from 'primevue/button'
+import { useLinkStore } from '@/stores/link-store'
+import CustomLoader from '@/components/loader/CustomLoader.vue'
+import LinkCard from '@/components/link/LinkCard.vue'
 
-onMounted(() => {
+const linksStore = useLinkStore()
+
+onMounted(async () => {
   if (window.location.hash) {
     const hashParams = new URLSearchParams(window.location.hash.substring(1))
     const accessToken = hashParams.get('access_token')
@@ -18,5 +27,6 @@ onMounted(() => {
       window.history.replaceState(null, null, window.location.pathname)
     }
   }
+  await linksStore.loadLinks()
 })
 </script>

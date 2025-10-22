@@ -1,7 +1,7 @@
 <template>
   <CategoriesModal v-model="isCategoriesModalOpen" />
   <CreateLinkModal v-model="isCreateLinkModalOpen" />
-  <Toast />
+
   <header class="mb-5">
     <Menubar>
       <template #start>
@@ -35,7 +35,6 @@ import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import Avatar from 'primevue/avatar'
 import Menubar from 'primevue/menubar'
-import Toast from 'primevue/toast'
 import { useUserStore } from '@/stores/user-store'
 import { useAuth } from '@/composables/use-auth'
 import { useToastNotify } from '@/composables/use-toast-notify'

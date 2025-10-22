@@ -1,5 +1,4 @@
 <template>
-  <Toast />
   <Form
     v-slot="$form"
     initial-values="formData"
@@ -64,7 +63,6 @@ import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import { Form } from '@primevue/forms'
-import Toast from 'primevue/toast'
 import * as z from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'

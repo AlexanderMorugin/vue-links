@@ -18,6 +18,13 @@ app.use(PrimeVue, {
   theme: {
     preset: Aura,
   },
+  pt: {
+    toast: {
+      root: {
+        style: 'max-width: calc(100vw - 40px)',
+      },
+    },
+  },
 })
 app.use(ToastService)
 

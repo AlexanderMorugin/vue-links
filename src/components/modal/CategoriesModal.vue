@@ -1,5 +1,4 @@
 <template>
-  <Toast />
   <Dialog modal header="Категории" v-model:visible="modelValue" :style="{ width: '25rem' }">
     <template v-if="isLoadingModal">
       <div class="grid grid-cols-[1fr_32px] items-center mt-3 mb-1 gap-5">
@@ -44,7 +43,6 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Skeleton from 'primevue/skeleton'
 import { Form } from '@primevue/forms'
-import Toast from 'primevue/toast'
 import { supabase } from '@/supabase'
 import { useToastNotify } from '@/composables/use-toast-notify'
 

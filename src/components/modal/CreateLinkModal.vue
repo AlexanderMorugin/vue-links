@@ -1,6 +1,5 @@
 <template>
-  <Toast />
-  <Dialog modal header="Создание ссылки" v-model:visible="modelValue" :style="{ width: '25rem' }">
+  <Dialog modal :header="textHeader" v-model:visible="modelValue" :style="{ width: '25rem' }">
     <Form
       v-slot="$form"
       initial-values="formData"
@@ -59,7 +58,7 @@
           <label for="isFavorite">Добавить в избранное</label>
         </div>
         <div class="flex justify-end gap-2 my-4">
-          <Button type="submit" label="Добавить" :loading="isLoadingButton" />
+          <Button type="submit" :label="textButton" :loading="isLoadingButton" />
         </div>
       </template>
     </Form>
@@ -67,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
@@ -78,15 +77,27 @@ import { Form } from '@primevue/forms'
 import * as z from 'zod'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'
-import Toast from 'primevue/toast'
 import { supabase } from '@/supabase'
 import { useToastNotify } from '@/composables/use-toast-notify'
 import CustomLoader from '../loader/CustomLoader.vue'
 import { useUserStore } from '@/stores/user-store'
+import { useLinkStore } from '@/stores/link-store'
 
 const { showToast } = useToastNotify()
 const modelValue = defineModel()
 const userStore = useUserStore()
+const linksStore = useLinkStore()
+
+const { isEdit, id } = defineProps({
+  isEdit: {
+    type: Boolean,
+    default: false,
+  },
+  id: {
+    type: Number,
+    required: false,
+  },
+})
 
 const formData = ref({
   name: '',
@@ -116,6 +127,7 @@ const cleanFormInputs = () => {
     isFavorite: false,
   }
 }
+
 const getCategories = async () => {
   isLoading.value = false
   try {
@@ -143,7 +155,37 @@ const getDomaine = (url) => {
   return hostname
 }
 
-const submitLinkForm = async () => {
+const textHeader = computed(() => {
+  return isEdit ? 'Редактирование ссылки' : 'Создание ссылки'
+})
+
+const textButton = computed(() => {
+  return isEdit ? 'Сохранить' : 'Добавить'
+})
+
+const getLink = async () => {
+  try {
+    const { data, error } = await supabase.from('links').select().eq('id', id)
+    if (error) throw error
+    formData.value.name = data[0].name
+    formData.value.url = data[0].url
+    formData.value.description = data[0].description
+    formData.value.category = categoryList.value.find((item) => item.id === data[0].category)
+    formData.value.isFavorite = data[0].is_favorite
+  } catch (error) {
+    console.log(error)
+    showToast('error', 'Ошибка', 'Не удалось получить данные.')
+  }
+}
+
+const loadModal = async () => {
+  isLoading.value = true
+  await getCategories()
+  if (isEdit) await getLink()
+  isLoading.value = false
+}
+
+const addNewLink = async () => {
   isLoadingButton.value = false
   const staticName = getDomaine(formData.value.url)
 
@@ -159,7 +201,6 @@ const submitLinkForm = async () => {
   }
 
   try {
-    isLoadingButton.value = true
     const { error } = await supabase.from('links').insert(payload).select()
     if (error) throw error
     modelValue.value = false
@@ -173,7 +214,41 @@ const submitLinkForm = async () => {
   }
 }
 
+const updateLink = async () => {
+  isLoadingButton.value = false
+
+  const payload = {
+    name: formData.value.name,
+    url: formData.value.url,
+    description: formData.value.description,
+    category: formData.value.category.id,
+    is_favorite: formData.value.isFavorite,
+  }
+
+  try {
+    isLoadingButton.value = true
+    const { error } = await supabase.from('links').update(payload).eq('id', id)
+    if (error) throw error
+    showToast('success', 'Поздравляем!', 'Ссылка успешно обновлена!')
+  } catch (error) {
+    console.log(error)
+    showToast('error', 'Ошибка', 'Не удалось обновить ссылку.')
+  } finally {
+    isLoadingButton.value = false
+  }
+}
+
+const submitLinkForm = async () => {
+  if (isEdit) {
+    await updateLink()
+  } else {
+    await addNewLink()
+  }
+
+  await linksStore.loadLinks()
+}
+
 watch(modelValue, async (newValue) => {
-  if (newValue) await getCategories()
+  if (newValue) await loadModal()
 })
 </script>
