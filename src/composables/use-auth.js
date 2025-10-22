@@ -63,7 +63,7 @@ export function useAuth() {
   const resetpassword = async (email) => {
     return await handleRequest(async () => {
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:5173/reset-password',
+        redirectTo: 'https://vue-links.vercel.app/reset-password',
       })
 
       if (error) throw error
