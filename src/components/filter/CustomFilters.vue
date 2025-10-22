@@ -30,6 +30,6 @@ import Checkbox from 'primevue/checkbox'
 const linksStore = useLinkStore()
 
 const updateFilters = () => {
-  linksStore.loadLinks()
+  linksStore.loadLinks(true)
 }
 </script>

@@ -245,7 +245,7 @@ const submitLinkForm = async () => {
     await addNewLink()
   }
 
-  await linksStore.loadLinks()
+  await linksStore.loadLinks(true, true)
 }
 
 watch(modelValue, async (newValue) => {

@@ -4,12 +4,27 @@ import { supabase } from '@/supabase'
 
 export const useLinkStore = defineStore('linkStore', () => {
   const isLoading = ref(false)
-  const links = ref(null)
+  const links = ref([])
   const isOnlyFavorite = ref(false)
   const isPopular = ref(false)
+  const totalLinks = ref(0)
+  const hasMore = ref(true)
+  const offset = ref(0)
+  const LIMIT = 4
 
-  const loadLinks = async () => {
+  const loadLinks = async (resetPages = false, resetFilters = false) => {
     isLoading.value = false
+
+    if (resetPages) {
+      offset.value = 0
+      links.value = []
+      hasMore.value = true
+    }
+
+    if (resetFilters) {
+      isOnlyFavorite.value = false
+      isPopular.value = false
+    }
 
     try {
       isLoading.value = true
@@ -17,8 +32,9 @@ export const useLinkStore = defineStore('linkStore', () => {
         .from('links')
         .select(
           'id, name, url, description, is_favorite, preview_image, click_count, category (id, name)',
+          { count: 'exact' },
         )
-      // .order('created_at', { ascending: false })
+        .range(offset.value, offset.value + LIMIT - 1)
 
       if (isOnlyFavorite.value) query = query.eq('is_favorite', true)
       if (isPopular.value) {
@@ -26,9 +42,13 @@ export const useLinkStore = defineStore('linkStore', () => {
       } else {
         query = query.order('created_at', { ascending: false })
       }
-      const { data, error } = await query
+      const { data, error, count } = await query
+      totalLinks.value = count
+      offset.value += data.length
+      console.log(count)
       if (error) throw error
-      links.value = data
+      links.value.push(...data)
+      hasMore.value = offset.value < totalLinks.value
     } catch (err) {
       console.log(err)
     } finally {
@@ -78,6 +98,7 @@ export const useLinkStore = defineStore('linkStore', () => {
     isLoading,
     isOnlyFavorite,
     isPopular,
+    hasMore,
     links,
     loadLinks,
     toggleIsFavorite,
