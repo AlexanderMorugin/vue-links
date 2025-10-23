@@ -1,6 +1,6 @@
 <template>
   <CustomLoader v-if="linksStore.isLoading && linksStore.offset === 0" />
-  <main v-else>
+  <main v-else class="max-w-[1400px] mx-auto">
     <h1 v-if="!linksStore.links?.length" class="font-bold text-center">Пока ссылок нет.</h1>
     <template v-else>
       <CustomFilters />

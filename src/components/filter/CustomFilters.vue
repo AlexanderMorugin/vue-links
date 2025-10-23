@@ -1,6 +1,6 @@
 <template>
-  <section class="md:flex gap-5 justify-center block mb-3">
-    <div class="mb-3 flex items-center gap-2">
+  <section class="flex gap-5 justify-center mb-3 bg-yellow-600 rounded-md">
+    <div class="my-3 flex items-center gap-2">
       <Checkbox
         v-model="linksStore.isPopular"
         inputId="sortByPopular"
@@ -10,7 +10,7 @@
       />
       <label for="sortByPopular">Сначала популярные</label>
     </div>
-    <div class="mb-3 flex items-center gap-2">
+    <div class="my-3 flex items-center gap-2">
       <Checkbox
         v-model="linksStore.isOnlyFavorite"
         inputId="onlyFavorite"

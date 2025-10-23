@@ -2,7 +2,7 @@
   <CategoriesModal v-model="isCategoriesModalOpen" />
   <CreateLinkModal v-model="isCreateLinkModalOpen" />
 
-  <header class="mb-5">
+  <header class="mb-5 max-w-[1400px] mx-auto">
     <Menubar>
       <template #start>
         <div class="flex items-center gap-2">

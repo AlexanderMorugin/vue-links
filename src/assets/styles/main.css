@@ -8,7 +8,11 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  padding: 10px;
-  @apply bg-gray-900;
-  /* @apply text-black; */
+  padding: 20px;
+}
+
+@media (max-width: 767px) {
+  body {
+    padding: 10px;
+  }
 }

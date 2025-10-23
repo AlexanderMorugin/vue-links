@@ -10,7 +10,7 @@ export const useLinkStore = defineStore('linkStore', () => {
   const totalLinks = ref(0)
   const hasMore = ref(true)
   const offset = ref(0)
-  const LIMIT = 4
+  const LIMIT = 6
 
   const loadLinks = async (resetPages = false, resetFilters = false) => {
     isLoading.value = false

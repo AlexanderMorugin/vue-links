@@ -1,44 +1,42 @@
-# .
+<h1 align="center">Проект сайта Vue Links</h1>
 
-This template should help get you started developing with Vue 3 in Vite.
+Ссылка: https://vue-links.vercel.app/auth
 
-## Recommended IDE Setup
+![XWEAR Demo](/vue-links-demo.png)
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Стек
 
-## Recommended Browser Setup
+- Vue 3
+- Pinia
+- Supabase
+- Tailwind
+- Primevue
+- Zod
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## О проекте
 
-## Customize configuration
+- Сайт представляет собой платформу для сохранения на страничке пользователя карточек с полезными ресурсами. Каждая карточка - это ссылка ведущая на внешний ресурс.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- Сделана регистрация, логин и логаут пользователяю. Все поля форм валидируются.
 
-## Project Setup
+- Сначала зарегистрированный пользователь создает "Категории" для будущих карточек. Затем создает саму "Карточку", где вводит название, ссылку, выбирает категорию и пишет описание. Также можно сразу отметить как "Избранное".
+- Карточки показываются на странице, согласно пагинации, по 6шт. Можно нажать кнопку "Показать еще" и подгрузятся еще 6 карточек и тд.
+- При нажатии на "Плюс" на любой карточке, пользователь может внести в "Избранное", скопировать внешнюю ссылку, редактировать карточку и удалить ее.
+- Так же вверху над карточками показывается поле с фильтрами сортировки.
 
-```sh
-npm install
-```
+- Используются модальные окна.
+- Роутинг страниц защищен.
 
-### Compile and Hot-Reload for Development
+- Приложение общается с удаленной PostgreSQL базой данных Supabase. Используя механизмы "Супабейс", запросы к базе происходят на основе встроенных API.
 
-```sh
-npm run dev
-```
+- Приложение адаптировано.
 
-### Compile and Minify for Production
+## Тестовый пользователь
 
-```sh
-npm run build
-```
+почта: anatoliy@mail.ru\
+пароль: 123456
 
-### Lint with [ESLint](https://eslint.org/)
+## Автор работы
 
-```sh
-npm run lint
-```
+Александр Моругин\
+август 2025г
