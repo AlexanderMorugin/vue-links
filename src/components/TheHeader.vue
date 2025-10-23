@@ -59,7 +59,7 @@ const handleSignOut = async () => {
   try {
     await signout()
     userStore.resetUser()
-    // linksStore.resetLinks()
+    linksStore.resetLinks()
     await router.replace({ name: 'AuthView' })
   } catch (error) {
     showToast('error', 'Ошибка разлогирования', errorMessage.value)

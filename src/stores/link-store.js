@@ -94,7 +94,12 @@ export const useLinkStore = defineStore('linkStore', () => {
     links.value = links.value.filter((item) => item.id !== id)
   }
 
-  const resetLinks = () => (links.value = [])
+  const resetLinks = () => {
+    links.value = []
+    offset.value = 0
+    isOnlyFavorite.value = false
+    isPopular.value = false
+  }
 
   return {
     isLoading,
