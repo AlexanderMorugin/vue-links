@@ -10,55 +10,60 @@
     >
       <CustomLoader v-if="isLoading" />
       <template v-else>
-        <div class="mb-3">
-          <InputText
-            name="name"
-            type="text"
-            v-model="formData.name"
-            class="w-full"
-            autocomplete="off"
-            placeholder="Название ссылки"
-          />
-          <Message v-if="$form.name?.invalid" severity="error" variant="simple" size="small">{{
-            $form.name.error.message
-          }}</Message>
+        <div v-if="!categoryList.length" class="font-bold text-center">
+          Сначала добавьте категории.
         </div>
-        <div class="mb-3">
-          <InputText
-            name="url"
-            type="text"
-            v-model="formData.url"
-            class="w-full"
-            autocomplete="off"
-            placeholder="Ссылка"
-          />
-          <Message v-if="$form.url?.invalid" severity="error" variant="simple" size="small">{{
-            $form.url.error.message
-          }}</Message>
-        </div>
-        <div class="mb-3">
-          <Select
-            v-model="formData.category"
-            :options="categoryList"
-            optionLabel="name"
-            placeholder="Выбурите категорию"
-            class="w-full"
-          />
-        </div>
-        <div class="mb-3">
-          <Textarea
-            v-model="formData.description"
-            class="w-full"
-            style="resize: none"
-            placeholder="Описание"
-          />
-        </div>
-        <div class="mb-3 flex items-center gap-2">
-          <Checkbox v-model="formData.isFavorite" inputId="isFavorite" binary />
-          <label for="isFavorite">Добавить в избранное</label>
-        </div>
-        <div class="flex justify-end gap-2 my-4">
-          <Button type="submit" :label="textButton" :loading="isLoadingButton" />
+        <div v-else>
+          <div class="mb-3">
+            <InputText
+              name="name"
+              type="text"
+              v-model="formData.name"
+              class="w-full"
+              autocomplete="off"
+              placeholder="Название ссылки"
+            />
+            <Message v-if="$form.name?.invalid" severity="error" variant="simple" size="small">{{
+              $form.name.error.message
+            }}</Message>
+          </div>
+          <div class="mb-3">
+            <InputText
+              name="url"
+              type="text"
+              v-model="formData.url"
+              class="w-full"
+              autocomplete="off"
+              placeholder="Ссылка"
+            />
+            <Message v-if="$form.url?.invalid" severity="error" variant="simple" size="small">{{
+              $form.url.error.message
+            }}</Message>
+          </div>
+          <div class="mb-3">
+            <Select
+              v-model="formData.category"
+              :options="categoryList"
+              optionLabel="name"
+              placeholder="Выбурите категорию"
+              class="w-full"
+            />
+          </div>
+          <div class="mb-3">
+            <Textarea
+              v-model="formData.description"
+              class="w-full"
+              style="resize: none"
+              placeholder="Описание"
+            />
+          </div>
+          <div class="mb-3 flex items-center gap-2">
+            <Checkbox v-model="formData.isFavorite" inputId="isFavorite" binary />
+            <label for="isFavorite">Добавить в избранное</label>
+          </div>
+          <div class="flex justify-end gap-2 my-4">
+            <Button type="submit" :label="textButton" :loading="isLoadingButton" />
+          </div>
         </div>
       </template>
     </Form>
@@ -109,7 +114,7 @@ const formData = ref({
 
 const isLoading = ref(false)
 const isLoadingButton = ref(false)
-const categoryList = ref(null)
+const categoryList = ref([])
 
 const rules = z.object({
   name: z.string('Заполните поле').min(1, { message: 'Введите название ссылки' }),

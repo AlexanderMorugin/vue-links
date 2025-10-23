@@ -14,7 +14,13 @@
           autocomplete="off"
         />
         <div class="flex justify-end gap-2 my-4">
-          <Button type="button" label="Добавить" :loading="isLoading" @click="submitCategoryForm" />
+          <Button
+            :disabled="!categoryField || categoryField.length < 3"
+            type="button"
+            label="Добавить"
+            :loading="isLoading"
+            @click="submitCategoryForm"
+          />
         </div>
         <div
           v-for="item in categoryList"

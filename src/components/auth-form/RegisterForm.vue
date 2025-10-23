@@ -68,8 +68,10 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 import Message from 'primevue/message'
 import { useToastNotify } from '@/composables/use-toast-notify'
 import { useAuth } from '@/composables/use-auth'
+import { useUserStore } from '@/stores/user-store'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 const { showToast } = useToastNotify()
 const { loading, errorMessage, signup, signinGitHub } = useAuth()
@@ -98,6 +100,7 @@ const submitRegisterForm = async ({ valid }) => {
       firstname: formData.value.firstname,
     })
 
+    await userStore.getUser()
     router.replace({ name: 'HomeView' })
   } catch (error) {
     showToast('error', 'Ошибка регистрации', errorMessage.value)

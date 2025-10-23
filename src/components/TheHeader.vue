@@ -40,9 +40,11 @@ import { useAuth } from '@/composables/use-auth'
 import { useToastNotify } from '@/composables/use-toast-notify'
 import CategoriesModal from './modal/CategoriesModal.vue'
 import CreateLinkModal from './modal/CreateLinkModal.vue'
+import { useLinkStore } from '@/stores/link-store'
 
 const router = useRouter()
 const userStore = useUserStore()
+const linksStore = useLinkStore()
 const { showToast } = useToastNotify()
 const { errorMessage, signout } = useAuth()
 
@@ -57,6 +59,7 @@ const handleSignOut = async () => {
   try {
     await signout()
     userStore.resetUser()
+    // linksStore.resetLinks()
     await router.replace({ name: 'AuthView' })
   } catch (error) {
     showToast('error', 'Ошибка разлогирования', errorMessage.value)

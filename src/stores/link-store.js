@@ -45,7 +45,7 @@ export const useLinkStore = defineStore('linkStore', () => {
       const { data, error, count } = await query
       totalLinks.value = count
       offset.value += data.length
-      console.log(count)
+
       if (error) throw error
       links.value.push(...data)
       hasMore.value = offset.value < totalLinks.value
@@ -94,6 +94,8 @@ export const useLinkStore = defineStore('linkStore', () => {
     links.value = links.value.filter((item) => item.id !== id)
   }
 
+  const resetLinks = () => (links.value = [])
+
   return {
     isLoading,
     isOnlyFavorite,
@@ -104,5 +106,6 @@ export const useLinkStore = defineStore('linkStore', () => {
     toggleIsFavorite,
     addClickCount,
     removeLink,
+    resetLinks,
   }
 })

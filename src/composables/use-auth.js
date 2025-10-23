@@ -16,10 +16,11 @@ export function useAuth() {
         },
       })
 
+      if (error) throw error
+
       // Создаем пользователя в supabase database users
       await supabase.from('users').insert([{ id: data.user.id, email, firstname }])
 
-      if (error) throw error
       return data
     })
   }
